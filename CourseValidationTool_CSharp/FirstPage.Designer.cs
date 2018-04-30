@@ -117,7 +117,7 @@
             this.Controls.Add(this.TestEncodingBtn);
             this.Controls.Add(this.OpenFileFolderBtn);
             this.Name = "FirstPage";
-            this.Text = "FirstPage";
+            this.Text = "课程校验工具";
             this.ResumeLayout(false);
             this.PerformLayout();
 
