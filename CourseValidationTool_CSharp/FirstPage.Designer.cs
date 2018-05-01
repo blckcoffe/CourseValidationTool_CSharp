@@ -40,9 +40,9 @@
             // 
             // OpenFileFolderBtn
             // 
-            this.OpenFileFolderBtn.Location = new System.Drawing.Point(410, 13);
+            this.OpenFileFolderBtn.Location = new System.Drawing.Point(508, 16);
             this.OpenFileFolderBtn.Name = "OpenFileFolderBtn";
-            this.OpenFileFolderBtn.Size = new System.Drawing.Size(111, 23);
+            this.OpenFileFolderBtn.Size = new System.Drawing.Size(142, 29);
             this.OpenFileFolderBtn.TabIndex = 0;
             this.OpenFileFolderBtn.Text = "打开文件目录";
             this.OpenFileFolderBtn.UseVisualStyleBackColor = true;
@@ -50,9 +50,9 @@
             // 
             // TestEncodingBtn
             // 
-            this.TestEncodingBtn.Location = new System.Drawing.Point(12, 102);
+            this.TestEncodingBtn.Location = new System.Drawing.Point(13, 133);
             this.TestEncodingBtn.Name = "TestEncodingBtn";
-            this.TestEncodingBtn.Size = new System.Drawing.Size(92, 31);
+            this.TestEncodingBtn.Size = new System.Drawing.Size(108, 31);
             this.TestEncodingBtn.TabIndex = 1;
             this.TestEncodingBtn.Text = "测试编码";
             this.TestEncodingBtn.UseVisualStyleBackColor = true;
@@ -60,17 +60,17 @@
             // 
             // richTextBox
             // 
-            this.richTextBox.Location = new System.Drawing.Point(12, 139);
+            this.richTextBox.Location = new System.Drawing.Point(13, 170);
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(776, 299);
+            this.richTextBox.Size = new System.Drawing.Size(829, 340);
             this.richTextBox.TabIndex = 2;
             this.richTextBox.Text = "";
             // 
             // fileFolderText
             // 
-            this.fileFolderText.Location = new System.Drawing.Point(13, 13);
+            this.fileFolderText.Location = new System.Drawing.Point(13, 19);
             this.fileFolderText.Name = "fileFolderText";
-            this.fileFolderText.Size = new System.Drawing.Size(391, 22);
+            this.fileFolderText.Size = new System.Drawing.Size(489, 22);
             this.fileFolderText.TabIndex = 3;
             // 
             // enCodingList
@@ -80,7 +80,7 @@
             this.enCodingList.Items.AddRange(new object[] {
             "GB2312",
             "UTF-8"});
-            this.enCodingList.Location = new System.Drawing.Point(12, 60);
+            this.enCodingList.Location = new System.Drawing.Point(16, 75);
             this.enCodingList.Name = "enCodingList";
             this.enCodingList.Size = new System.Drawing.Size(120, 36);
             this.enCodingList.TabIndex = 4;
@@ -88,7 +88,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 40);
+            this.label1.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.label1.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.label1.Location = new System.Drawing.Point(13, 55);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(92, 17);
             this.label1.TabIndex = 5;
@@ -96,9 +98,9 @@
             // 
             // validateCourseBtn
             // 
-            this.validateCourseBtn.Location = new System.Drawing.Point(116, 102);
+            this.validateCourseBtn.Location = new System.Drawing.Point(139, 133);
             this.validateCourseBtn.Name = "validateCourseBtn";
-            this.validateCourseBtn.Size = new System.Drawing.Size(95, 31);
+            this.validateCourseBtn.Size = new System.Drawing.Size(110, 31);
             this.validateCourseBtn.TabIndex = 6;
             this.validateCourseBtn.Text = "校验课程";
             this.validateCourseBtn.UseVisualStyleBackColor = true;
@@ -108,7 +110,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 475);
+            this.ClientSize = new System.Drawing.Size(853, 537);
             this.Controls.Add(this.validateCourseBtn);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.enCodingList);

@@ -9,22 +9,42 @@ using System.Text.RegularExpressions;
 
 namespace CourseValidationTool_CSharp
 {
+    class LogCache
+    {
+        private StringBuilder logBuffer;
+        public LogCache()
+        {
+            logBuffer = new StringBuilder();
+        }
+
+        public void Write(string log)
+        {
+            logBuffer.Append(log);
+        }
+
+        public string GetLog()
+        {
+            return logBuffer.ToString();
+        }
+    }
+
     class JsonFileProcessor
     {
         private string CourseName;
         private List<string> CourseVideoInFolder;
         private List<string> CourseVideoInJsonOfSecton;
         private List<string> CourseVideoInJsonOfLinkedVideo;
-        private FileStream fsLog;
-        private StreamWriter swLog;
+        private LogCache swLog;
+        //private StreamWriter swLog;
 
         public JsonFileProcessor(string log )
         {
             CourseVideoInFolder = new List<string>();
             CourseVideoInJsonOfSecton = new List<string>();
             CourseVideoInJsonOfLinkedVideo = new List<string>();
-            fsLog = new FileStream( log, FileMode.Create, FileAccess.ReadWrite);
-            swLog = new StreamWriter(fsLog);
+            swLog = new LogCache();
+            //fsLog = new FileStream( log, FileMode.Create, FileAccess.ReadWrite);
+            //swLog = new StreamWriter(fsLog);
         }
 
         ~JsonFileProcessor()
@@ -34,11 +54,12 @@ namespace CourseValidationTool_CSharp
             //fsLog.Close();
         }
 
-        public void CloseStream()
+        public string GetLog()
         {
-            swLog.Flush();
-            swLog.Close();
-            fsLog.Close();
+            return swLog.GetLog();
+            //swLog.Flush();
+            //swLog.Close();
+            //fsLog.Close();
         }
 
         static public string ReadJsonFile(string FilePath, string enCoding )
@@ -79,9 +100,8 @@ namespace CourseValidationTool_CSharp
                 tmpResult = Regex.IsMatch(file.Name, regEpx);
                 if (!tmpResult)
                 {
-                    _WriteLogWithEnter("文件夹汇中课程名称和视频不匹配， 课程名称：" + strArray[strArray.Length - 1] + "____视频名称" + file.Name, 1);
+                    _WriteLogWithEnter("文件夹中课程名称和视频不匹配\r\n   课程名称：《" + strArray[strArray.Length - 1] + "》  视频名称：" + file.Name, 1);
                     result = false;
-                    //To do: Cout Error
                 }
             }
             return result;
@@ -93,7 +113,7 @@ namespace CourseValidationTool_CSharp
             string coursNameInJson = JsonContent.notetitle;
             if (coursNameInJson != this.CourseName)
             {
-                _WriteLogWithEnter("NoteTile中的课程名(" + coursNameInJson +  ")文件夹名称不一致", 1 );
+                _WriteLogWithEnter("NoteTile中的课程名《" + coursNameInJson +  "》与文件夹名称不一致", 1 );
                 result = false;
             }
 
@@ -101,7 +121,18 @@ namespace CourseValidationTool_CSharp
             string videoInJsonOfSection;
             CourseVideoInJsonOfLinkedVideo = JsonContent.linkedvideo;
 
-            foreach(CourseValidationTool_CSharp.Notecontent noteContent in JsonContent.notecontent )
+            //匹配视频名称： 课程名_数字.mp4 或者 课程名.obb
+            string regEpx = "^((" + coursNameInJson + "_)?\\d *\\.mp4)|(" + coursNameInJson + ".obb)";
+            foreach (string videoName in CourseVideoInJsonOfLinkedVideo)
+            {
+                if ( !Regex.IsMatch(videoName, regEpx) )
+                {
+                    _WriteLogWithEnter("LinkedVideo中的视频名称与notetile不一致：" + videoName, 1);
+                    result = false;
+                }
+            }
+
+            foreach (CourseValidationTool_CSharp.Notecontent noteContent in JsonContent.notecontent )
             {
                 if (noteContent.sectioncontent != null)
                 {
@@ -116,6 +147,11 @@ namespace CourseValidationTool_CSharp
                                 if (indexEnd != -1 )
                                 {
                                     videoInJsonOfSection = section.Substring(indexStart + 1, indexEnd - indexStart-1) + ".mp4";
+                                    if (CourseVideoInJsonOfLinkedVideo.IndexOf(videoInJsonOfSection) == -1)
+                                    {
+                                        _WriteLogWithEnter("Json sectioncontent中的视频在linkedvideo 中不存在\r\n  视频：" + videoInJsonOfSection, 1);
+                                        result = false;
+                                    }
                                     CourseVideoInJsonOfSecton.Add(videoInJsonOfSection);
                                 }
                             }
@@ -126,7 +162,7 @@ namespace CourseValidationTool_CSharp
 
             if ( CourseVideoInJsonOfSecton.Count != CourseVideoInFolder.Count )
             {
-                _WriteLogWithEnter("Json 包含的视频个数和文件夹中不一致", 1 );
+                _WriteLogWithEnter("Json sectioncontent 包含的视频个数和文件夹中不一致", 1 );
                 result = false;
             }
 
@@ -138,7 +174,7 @@ namespace CourseValidationTool_CSharp
 
             if (CourseVideoInJsonOfLinkedVideo.IndexOf(CourseName + ".obb") == -1)
             {
-                _WriteLogWithEnter(CourseName + ".obb 在linkedvideo 中不存在", 1);
+                _WriteLogWithEnter("《" + CourseName + ".obb 》在linkedvideo 中不存在", 1);
                 result = false;
             }
 
@@ -146,11 +182,11 @@ namespace CourseValidationTool_CSharp
             {
                 if(CourseVideoInJsonOfLinkedVideo.IndexOf(courseName) == -1 )
                 {
-                    _WriteLogWithEnter(courseName + "在Json文件linkedvideo中未找到 ", 1 );
+                    _WriteLogWithEnter("文件夹中的视频《" + courseName + "》在Json文件linkedvideo中未找到 ", 1 );
                     result = false;
                 }else if (CourseVideoInJsonOfSecton.IndexOf(courseName) == -1)
                 {
-                    _WriteLogWithEnter(courseName + "在Json文件sectioncontent中未找到 ", 1);
+                    _WriteLogWithEnter("文件夹中的视频《" + courseName + "》在Json文件sectioncontent中未找到 ", 1);
                     result = false;
                 }
             }
@@ -161,7 +197,11 @@ namespace CourseValidationTool_CSharp
         public int ProcessJsonFileFolder(string FileFolder, string enCoding)
         {
             int result = 0;
-            _WriteLogWithEnter("开始检查，文件路径： " + FileFolder, 0 );
+            System.DateTime currentTime = new System.DateTime();
+            currentTime = System.DateTime.Now;
+            string strY = currentTime.ToString("f");
+            _WriteLogWithEnter(strY, 0);
+            _WriteLogWithEnter("开始检查，文件路径：" + FileFolder, 0 );
             Boolean folderResult = ValidateFolderFiles(FileFolder);
             if ( true == folderResult)
             {

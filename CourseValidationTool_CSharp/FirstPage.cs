@@ -29,7 +29,7 @@ namespace CourseValidationTool_CSharp
         {
             JsonFileProcessor jsonFileProcessor = new JsonFileProcessor(logPath);        
             int result = jsonFileProcessor.ProcessJsonFileFolder(fileFolderText.Text, enCoding);
-            jsonFileProcessor.CloseStream();
+            richTextBox.Text = jsonFileProcessor.GetLog();
             return result;
         }
 
@@ -46,25 +46,16 @@ namespace CourseValidationTool_CSharp
                 int result = validateCourse( fileFolderText.Text, enCodeCode);
                 if(result == 0)
                 {
-                    MessageBox.Show("没有发现问题", "成功", MessageBoxButtons.OK);
+                    MessageBox.Show("没有发现问题", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show("发现问题", "错误", MessageBoxButtons.OK);
+                    MessageBox.Show("发现问题", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
-                string filecontent;
-                FileStream fs = new FileStream(logPath, FileMode.Open, FileAccess.Read);
-                StreamReader sr = new StreamReader(fs);
-                sr.BaseStream.Seek(0, SeekOrigin.Begin);
-                filecontent = sr.ReadToEnd();
-                sr.Close();
-                fs.Close();
-                richTextBox.Text = filecontent;
             }
             else
             {
-                MessageBox.Show("请选择课程所在目录", "错误", MessageBoxButtons.OK);
+                MessageBox.Show("请选择课程所在目录", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -74,7 +65,7 @@ namespace CourseValidationTool_CSharp
             string enCodeCode = enCodingList.GetItemText(enCodingList.SelectedItem);
             if((enCodeCode == "")||(fileFolderText.Text == "")){
 
-                MessageBox.Show("请选择课程所在目录或编码", "错误", MessageBoxButtons.OK);
+                MessageBox.Show("请选择课程所在目录或编码", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             string jsonFile = JsonFileProcessor.ReadJsonFile(fileFolderText.Text, enCodeCode);
