@@ -162,13 +162,17 @@ namespace CourseValidationTool_CSharp
 
             if ( CourseVideoInJsonOfSecton.Count != CourseVideoInFolder.Count )
             {
-                _WriteLogWithEnter("Json sectioncontent 包含的视频个数和文件夹中不一致", 1 );
+                _WriteLogWithEnter("Json sectioncontent 包含的视频个数和文件夹中不一致" + "  Json sectioncontent视频个数" + CourseVideoInJsonOfSecton.Count
+                    + "   文件夹中视频个数" + CourseVideoInFolder.Count
+                    , 1 );
                 result = false;
             }
 
             if (CourseVideoInJsonOfSecton.Count != CourseVideoInJsonOfLinkedVideo.Count - 1)
             {
-                _WriteLogWithEnter("Json sectioncontent 包含的视频个数和 linkedvideo 中不一致", 1);
+                _WriteLogWithEnter("Json sectioncontent 包含的视频个数和 linkedvideo 中不一致\r\n" + "  Json sectioncontent视频个数" + CourseVideoInJsonOfSecton.Count
+                    + "   linkedvideo 中视频个数" + (CourseVideoInJsonOfLinkedVideo.Count - 1)
+                    , 1);
                 result = false;
             }
 
